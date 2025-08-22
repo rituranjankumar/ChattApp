@@ -8,7 +8,7 @@ const initSocket = (server) => {
   "https://chatt-app-rosy.vercel.app",
   "https://chatt-app-git-main-rituranjan-kumars-projects.vercel.app",
   "https://chatt-ixnitmu25-rituranjan-kumars-projects.vercel.app",
-  "http://localhost:3000"
+  "http://localhost:5173"
 ];
 
 io = new Server(server, {

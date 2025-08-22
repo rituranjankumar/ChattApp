@@ -25,6 +25,9 @@ export const SignUp = async (signupData, navigate) => {
     console.error("Signup error:", error.response.data.message);
 
   }
+  finally{
+    toast.dismiss(toastId);
+  }
 
 };
 

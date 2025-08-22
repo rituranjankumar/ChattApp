@@ -79,7 +79,7 @@ const allowedOrigins = [
   "https://chatt-app-rosy.vercel.app",
   "https://chatt-app-git-main-rituranjan-kumars-projects.vercel.app",
   "https://chatt-ixnitmu25-rituranjan-kumars-projects.vercel.app",
-  "http://localhost:3000" // for local dev
+  "http://localhost:5173" // for local dev
 ];
 
 app.use(cors({
