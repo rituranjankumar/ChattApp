@@ -1,0 +1,27 @@
+{
+  "name": "chatapp",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "client": "npm run dev --prefix client",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm run client\" \"npm run server\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "@react-oauth/google": "^0.12.2",
+    "@reduxjs/toolkit": "^2.8.2",
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
+    "google-auth-library": "^10.2.1",
+    "react-hot-toast": "^2.5.2",
+    "react-icon": "^1.0.0",
+    "react-icons": "^5.5.0",
+    "react-perfect-scrollbar": "^1.5.8",
+    "react-redux": "^9.2.0",
+    "socket.io-client": "^4.8.1"
+  }
+}
