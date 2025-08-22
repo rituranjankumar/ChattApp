@@ -4,12 +4,20 @@ const userSocketMap = {}; // userId => Set of socket IDs
 const initSocket = (server) => {
  
 
-  io = new Server(server, {
-    connectionStateRecovery: {},
-    cors: {
-      origin: "*",
-    },
-  });
+ const allowedOrigins = [
+  "https://chatt-app-rosy.vercel.app",
+  "https://chatt-app-git-main-rituranjan-kumars-projects.vercel.app",
+  "https://chatt-ixnitmu25-rituranjan-kumars-projects.vercel.app",
+  "http://localhost:3000"
+];
+
+io = new Server(server, {
+  connectionStateRecovery: {},
+  cors: {
+    origin: allowedOrigins,
+    credentials: true,
+  },
+});
 
   io.on("connection", (socket) => {
     const userId = socket.handshake.auth.userId;

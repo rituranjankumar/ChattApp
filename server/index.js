@@ -74,9 +74,23 @@ cloudinaryConnect();
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = [
+  "https://chatt-app-rosy.vercel.app",
+  "https://chatt-app-git-main-rituranjan-kumars-projects.vercel.app",
+  "https://chatt-ixnitmu25-rituranjan-kumars-projects.vercel.app",
+  "http://localhost:3000" // for local dev
+];
+
 app.use(cors({
-  origin: "*",  // Adjust this in production
-  credentials:true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 }));
 app.use(fileUpload({
   useTempFiles: true,
