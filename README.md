@@ -46,14 +46,14 @@ It includes **Google OAuth login**, **seen/unseen message indicators**, user pro
 ## 📦 Project Structure
 ```
 ChatApp/
-│── backend/              # Express + MongoDB + Socket.IO
+│── server/              # Express + MongoDB + Socket.IO
 │   ├── controllers/
 │   ├── models/
 │   ├── routes/
 │   ├── server.js
 │   └── .env.example
 │
-│── frontend/             # React + Redux + Tailwind
+│── client/             # React + Redux + Tailwind
 │   ├── src/
 │   ├── public/
 │   └── .env.example
@@ -77,19 +77,19 @@ cd ChattApp
 ### 2) Install
 If your root uses `concurrently` with per-app installs:
 ```bash
-npm install --prefix backend
-npm install --prefix frontend
+npm install --prefix server
+npm install --prefix client
 ```
 _or_ inside each folder:
 ```bash
-cd backend && npm install
-cd ../frontend && npm install
+cd servver && npm install
+cd ../client && npm install
 ```
 
 ### 3) Environment Variables
-Create `.env` files from the provided `.env.example` in **backend** and **frontend**.
+Create `.env` files from the provided `.env.example` in **server** and **client**.
 
-**backend/.env**
+**server/.env**
 ```
 PORT=7000
 MONGO_URI=your_mongodb_connection_string
@@ -101,7 +101,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 GOOGLE_REDIRECT_URI=http://localhost:7000/auth/google/callback
 ```
 
-**frontend/.env**
+**client/.env**
 ```
 REACT_APP_BACKEND_URL=http://localhost:7000
 REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
@@ -114,35 +114,19 @@ Using root scripts (recommended):
 ```bash
 # package.json (root)
 # "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
-# "dev:server": "npm run dev --prefix backend",
-# "dev:client": "npm start --prefix frontend"
+# "dev:server": "npm run dev --prefix server",
+# "dev:client": "npm start --prefix client"
 
 npm run dev
 ```
 
 Or run separately:
 ```bash
-cd backend && npm run dev
-cd ../frontend && npm start
+cd server && npm run dev
+cd ../client && npm start
 ```
 
----
-
-## 🔑 Google OAuth – How It Works
-1. User clicks **Continue with Google** on the frontend.
-2. Google returns an **authorization code** to the frontend.
-3. Frontend sends the code to **backend** (`/auth/google`).
-4. Backend exchanges code with Google, verifies user, and returns your app’s **JWT**.
-5. Frontend stores JWT (httpOnly cookie or memory) → user is authenticated.
-
-**Backend endpoints (example):**
-```
-POST /auth/google           # exchange code → JWT
-GET  /auth/me               # get current user using JWT
-POST /auth/logout           # invalidate cookie/session
-```
-
----
+ 
 
 ## 🚀 Deployment
 
@@ -154,7 +138,7 @@ POST /auth/logout           # invalidate cookie/session
 
 Render sets `PORT` automatically; read it via `process.env.PORT`.
 
-### Frontend → Vercel
+### client → Vercel
 - **Root:** `frontend/`
 - **Build Command:** `npm run build`
 - **Output Dir:** `build`
