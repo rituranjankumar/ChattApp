@@ -130,7 +130,8 @@ This project is licensed under the MIT License.
 
 ---
 
-## 👨‍💻 Author
+## 🧑‍💻 Author
+
 **Rituranjan Kumar**  
-📧 [Your Email]  
-🌐 [Your Portfolio or LinkedIn]  
+
+📧 kunal50639@gmail.com
