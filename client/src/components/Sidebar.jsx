@@ -168,7 +168,7 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
                     <div>
                        { latestMessage[user?._id]?.senderId === user?._id
         ?  (<p className='text-gray-500'>{user?.firstName} :</p>)
-        :  (<p className='text-gray-500'>{latestMessage[user?._id]?.text.length>0 && "you :"}</p>)
+        :  (<p className='text-gray-500'>{latestMessage[user?._id]?.text && latestMessage[user?._id]?.text?.length>0 && "you :"}</p>)
          }
                     </div>
               <div className="  text-sm text-gray-200">
