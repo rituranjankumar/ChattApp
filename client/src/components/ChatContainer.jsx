@@ -7,7 +7,7 @@ import { clickOutSideEfffect } from '../utills/clickOutSideEffect';
 // for emogy
 import EmojiPicker from "emoji-picker-react";
 import { FiSmile } from "react-icons/fi"; // emoji icon
-
+import { MdOutlineCancel } from "react-icons/md";
 import { sendmessagetoSelectedUser, markMessagesAsSeen } from '../Services/MessageServices';
 import { timeFormatter } from '../utills/timefromatter';
 import { setunseenMessage, updateUnseenMessage, updateLatestMessage } from '../slices/onlineUserSlice';
@@ -25,6 +25,8 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
     const emojiRef=useRef();
     clickOutSideEfffect(emojiRef,()=>setShowEmojiPicker(false));
 
+
+    const inputRef=useRef();
   useEffect(() => {
     setMessages(selectedUsermessages);
   }, [selectedUsermessages])
@@ -52,6 +54,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
         setMessages((prev) => [...prev, sent]);
         setMessageInput("");
         setImage(null);
+        
       }
     } catch (err) {
     //  console.error("Error sending message", err);
@@ -59,6 +62,8 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
       setIsSending(false);
     }
   };
+
+
 
 
   useEffect(() => {
@@ -97,7 +102,12 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
   }, [selectedUser, token, unseenMessage, latestMessage]);
   // console.log("unseen messages ARRE", unseenMessage);
 
-
+  // for focus on the input after message send
+useEffect(() => {
+  if (messageInput === "") {
+    inputRef.current?.focus();
+  }
+}, [messageInput]);
   return selectedUser ? (
     <div
       className="h-screen relative   flex flex-col bg-cover bg-center backdrop-blur-lg"
@@ -199,7 +209,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
       </div>
 
       {/* Message Input */}
-      <div className="min-w-full h-[64px] px-4 py-3 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center gap-2 border-t border-stone-600 z-10">
+      <div className="min-w-full h-[64px] relative px-4 py-3 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center gap-2 border-t border-stone-600 z-10">
         {/* Upload Button */}
         <label className="cursor-pointer relative p-2 rounded-full hover:bg-gray-700 transition-colors">
           {/* Image Preview */}
@@ -207,12 +217,15 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
             <div className="absolute -top-16 left-0 w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500 shadow-lg">
               <img
                 src={URL.createObjectURL(image)}
-                className="w-full h-full object-cover"
+                className="w-full h-full z-10 object-cover"
                 alt="Preview"
               />
+              
+             
             </div>
+             
           )}
-
+            
           <input
             disabled={sending}
             type="file"
@@ -220,9 +233,10 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
             className="hidden"
             onChange={(e) => setImage(e.target.files?.[0])}
           />
-          <FiImage className="w-5 h-5 text-gray-300" />
+          <FiImage className="w-5 h-5 text-gray-300" /> 
         </label>
 
+         {image &&  <MdOutlineCancel className='absolute h-7 w-7 left-0.5 top-[0px] right-0 z-30 text-red-700 overflow-visible   rounded-full cursor-pointer p-1  ' onClick={()=>setImage(null)} />}
 
         {/* Emoji Button */}
         <div
@@ -252,10 +266,12 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
         {/* Text Input */}
         <input
           disabled={sending}
+          ref={inputRef}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
               handleSend();
+              
             }
           }}
           type="text"
