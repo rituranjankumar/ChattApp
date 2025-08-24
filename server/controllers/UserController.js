@@ -55,10 +55,17 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     console.log(req.body)
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid email or password" });
+    if(user.provider === "google")
+    {
+      return res.status(500).json({
+        success:false,
+        message:"Please login by google"
+      })
+    }
+    if (!user) return res.status(401).json({ message: "user Not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
+    if (!isMatch) return res.status(401).json({ message: "Incorrect Password" });
 
     const token = generateToken(user._id);
 
@@ -136,7 +143,7 @@ exports.loginByGoogle = async (req, res) => {
         return res.status(400).json({
           success: false,
           message:
-            "Email already registered with password. Please login with email & password instead.",
+            "Email already registered.login with email & password",
         });
       }
 

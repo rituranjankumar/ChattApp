@@ -16,7 +16,7 @@ export const getUserSelectedMessage = async (token, userId) => {
       //  console.log("userselected message",response?.data?.messages)
         return response?.data?.messages;
     } catch (error) {
-        console.error("Error fetching messages:", error);
+      //  console.error("Error fetching messages:", error);
 
         // Show toast with specific error message
         toast.error(
@@ -48,7 +48,7 @@ export const sendmessagetoSelectedUser = async (token, userId, text, imageFile) 
     );
     return response.data.message;
   } catch (error) {
-    console.error("Send message error:", error);
+   // console.error("Send message error:", error);
     toast.error(error?.response?.data?.message || "Failed to send message");
     return null;
   }
@@ -61,7 +61,7 @@ export const markMessagesAsSeen = async (token, messageId) => {
       Authorization: `Bearer ${token}`,
     });
   } catch (error) {
-    console.error("Mark as seen error:", error);
+   // console.error("Mark as seen error:", error);
     toast.error("Failed to mark message as seen");
   }
 };
@@ -69,7 +69,7 @@ export const markMessagesAsSeen = async (token, messageId) => {
 export const searchUserByInput=async(token,query)=>
 {
    try {
-      console.log("SEARCH QUERY -> ", query);
+    //  console.log("SEARCH QUERY -> ", query);
 
       const response = await apiConnector("GET",MESSAGE_API.SEARCH_USER(query),null,{
         Authorization:`Bearer ${token}`
@@ -78,6 +78,6 @@ export const searchUserByInput=async(token,query)=>
        return   response.data.users;
       }
     } catch (error) {
-      console.error("Error searching user:", error);
+     // console.error("Error searching user:", error);
     }
 }

@@ -16,12 +16,12 @@ export const connectSocket = (userId, dispatch) => {
     },
   });
   socket.on("connect", () => {
-    console.log(" Socket connected: ", socket.id);
+   // console.log(" Socket connected: ", socket.id);
     dispatch(setSocketConnected(true));
   });
 
   socket.on("getOnlineUsers", (onlineUsers) => {
-    console.log("online ", onlineUsers)
+   // console.log("online ", onlineUsers)
     dispatch(setOnlineUsers(onlineUsers));
   });
 
@@ -34,7 +34,7 @@ export const getSocket = () => socket;
 
 export const disconnectSocket = (dispatch) => {
   if (socket) {
-    console.log("Manually disconnecting socket...");
+   // console.log("Manually disconnecting socket...");
     socket.off();          //   remove all listeners
     socket.disconnect();
     socket = null;  //   clear local socket

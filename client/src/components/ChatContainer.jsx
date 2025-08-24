@@ -3,10 +3,14 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiImage, FiSend } from 'react-icons/fi';
 import assets from '../assets/assets';
+import { clickOutSideEfffect } from '../utills/clickOutSideEffect';
+// for emogy
+import EmojiPicker from "emoji-picker-react";
+import { FiSmile } from "react-icons/fi"; // emoji icon
 
 import { sendmessagetoSelectedUser, markMessagesAsSeen } from '../Services/MessageServices';
 import { timeFormatter } from '../utills/timefromatter';
-import { setunseenMessage, updateUnseenMessage,updateLatestMessage } from '../slices/onlineUserSlice';
+import { setunseenMessage, updateUnseenMessage, updateLatestMessage } from '../slices/onlineUserSlice';
 import { getSocket } from '../socket';
 const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) => {
   const [messageInput, setMessageInput] = useState('');
@@ -16,6 +20,10 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
   const [messages, setMessages] = useState([]);
   const { allUsers, unseenMessage, onlineUsers, latestMessage } = useSelector((state) => state.onLineUser)
 
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+    const emojiRef=useRef();
+    clickOutSideEfffect(emojiRef,()=>setShowEmojiPicker(false));
 
   useEffect(() => {
     setMessages(selectedUsermessages);
@@ -46,7 +54,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
         setImage(null);
       }
     } catch (err) {
-      console.error("Error sending message", err);
+    //  console.error("Error sending message", err);
     } finally {
       setIsSending(false);
     }
@@ -59,7 +67,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
 
     const handleNewMessage = (message) => {
 
-      console.log("MESSAGE RECIEVED IS ->  ", message)
+      //console.log("MESSAGE RECIEVED IS ->  ", message)
       if (message.senderId === selectedUser?._id) {
 
         setMessages((prev) => [...prev, message]);
@@ -75,7 +83,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
     // handle latest MESSAGE
     const handleLatestMessage = ({ userId, message }) => {
 
-       console.log("📩 LatestMessage received:", { userId, message });
+     // console.log("📩 LatestMessage received:", { userId, message });
       dispatch(updateLatestMessage({ userId, message }));
     };
 
@@ -214,6 +222,32 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
           />
           <FiImage className="w-5 h-5 text-gray-300" />
         </label>
+
+
+        {/* Emoji Button */}
+        <div
+        ref={emojiRef}
+         className="relative">
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+            className="p-2 rounded-full hover:bg-gray-700"
+          >
+            <FiSmile className="w-5 h-5 text-gray-300" />
+          </button>
+
+          {showEmojiPicker && (
+            <div className="absolute bottom-12 left-0 z-50">
+              <EmojiPicker
+                onEmojiClick={(emoji) =>
+                  setMessageInput((prev) => prev + emoji.emoji)
+                }
+                theme="dark"
+              />
+            </div>
+          )}
+        </div>
+
 
         {/* Text Input */}
         <input

@@ -9,11 +9,11 @@ import { connectSocket, disconnectSocket, getSocket } from "../socket";
 export const SignUp = async (signupData, navigate) => {
   const toastId = toast.loading("Signing up...");
   try {
-    console.log("sign up data", signupData);
+  //  console.log("sign up data", signupData);
     const response = await apiConnector("POST", USER_API.SIGNUP, signupData);
 
 
-    console.log("Signup response:", response);
+   // console.log("Signup response:", response);
 
     toast.success("Signup successful");
 
@@ -22,7 +22,7 @@ export const SignUp = async (signupData, navigate) => {
     return response;
   } catch (error) {
     toast.error(error.response.data.message, { id: toastId, duration: 5000 });
-    console.error("Signup error:", error.response.data.message);
+  //  console.error("Signup error:", error.response.data.message);
 
   }
   finally{
@@ -32,12 +32,12 @@ export const SignUp = async (signupData, navigate) => {
 };
 
 export const Login = async (loginData, navigate, dispatch) => {
-  const toastId = toast.loading("Signing up...");
+  const toastId = toast.loading("Logging in...");
   try {
-    console.log("login up data", loginData);
+   // console.log("login up data", loginData);
     const response = await apiConnector("POST", USER_API.LOGIN, loginData);
 
-    console.log("login response:", response);
+   // console.log("login response:", response);
     const { token, user } = response.data;
 
     toast.success("Login successful");
@@ -51,15 +51,15 @@ export const Login = async (loginData, navigate, dispatch) => {
     connectSocket(userId, dispatch);
     const socket = getSocket()
     socket.on("getOnlineUsers", (onlineUsers) => {
-      console.log("online ", onlineUsers)
+    //  console.log("online ", onlineUsers)
       dispatch(setOnlineUsers(onlineUsers));
     });
     // Navigate after success
     navigate("/dashboard");
     return response;
   } catch (error) {
-    toast.error("Signup failed", { id: toastId });
-    console.error("Signup error:", error);
+    toast.error(`Login failed: ${error?.response?.data?.message || "Something went wrong"}`);
+    //console.error("Login error:", error);
     return null;
   }
   finally {
@@ -75,7 +75,7 @@ export const googleLoginSignup=async(code,dispatch,navigate)=>
     const res =await apiConnector("POST",USER_API.GOOGLELOGIN,{code});
     if(res.data.success)
     {
-      console.log("response from backend after login " , res);
+    //  console.log("response from backend after login " , res);
       toast.success("Login successful");
       dispatch(setToken(res?.data?.token))
           
@@ -95,7 +95,8 @@ export const googleLoginSignup=async(code,dispatch,navigate)=>
     }
   }catch(error)
   {
-    console.log("GOOGLELOGINSIGNUP REPONSE ERROR ",error)
+   toast.error(`Google Login failed: ${error?.response?.data?.message}`);
+   // console.log("GOOGLELOGINSIGNUP REPONSE ERROR ",error)
   }
   finally{
     toast.dismiss(toastId);
@@ -113,7 +114,7 @@ export const getAllUsers = async (token) => {
     return response.data;
 
   } catch (error) {
-    console.error("Error fetching users:", error);
+   // console.error("Error fetching users:", error);
     throw error.response?.data || { message: "Something went wrong" };
   }
 };
@@ -133,7 +134,7 @@ export const updateProfile = async (token, formData) => {
       }
     );
 
-    console.log("RESPONSE OF UPDATE PROFILE", res);
+    //console.log("RESPONSE OF UPDATE PROFILE", res);
 
     if (res?.data?.success) {
       toast.success("Profile updated");
@@ -143,7 +144,7 @@ export const updateProfile = async (token, formData) => {
 
     return res?.data;
   } catch (error) {
-    console.log("ERROR IN UPDATE PROFILE", error);
+  //  console.log("ERROR IN UPDATE PROFILE", error);
     toast.error(
       error?.response?.data?.message || error.message || "Something went wrong"
     );

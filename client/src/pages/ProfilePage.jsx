@@ -13,11 +13,11 @@ const ProfilePage = () => {
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  console.log("image is  ",user?.profilePic);
+  //console.log("image is  ",user?.profilePic);
   const [preview, setPreview] = useState(user?.profilePic || null);
 
 
-   console.log("preview is  ",preview);
+ //  console.log("preview is  ",preview);
   const {
     register,
     handleSubmit,
@@ -55,7 +55,7 @@ const ProfilePage = () => {
       dispatch(setUser(response?.user));
       localStorage.setItem("user", JSON.stringify(response?.user));
     } catch (error) {
-      console.log("Error in update profile:", error.message);
+     // console.log("Error in update profile:", error.message);
     }
   };
 

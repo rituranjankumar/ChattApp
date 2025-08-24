@@ -46,12 +46,12 @@ const Dashboard = () => {
       
   
     } catch (err) {
-      console.error("Failed to load users", err);
+      //console.error("Failed to load users", err);
     }
   }
 
   useEffect(() => {
-  console.log("Latest Messages (after update) ", latestMessage);
+ // console.log("Latest Messages (after update) ", latestMessage);
 }, [latestMessage]);
   useEffect(() => {
     fetchUsers();

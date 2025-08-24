@@ -17,7 +17,7 @@ import { setOnlineUsers } from './slices/onlineUserSlice';
  
 const App = () => {
   const { token } = useSelector((state) => state.auth)
-  console.log("app js")
+  //console.log("app js")
   const dispatch = useDispatch();
   const { socketConnected } = useSelector((state) => state.onLineUser);
   const { user } = useSelector((state) => state.profile);
@@ -33,7 +33,7 @@ const App = () => {
     if (!socket) return;
 
     socket.on("getOnlineUsers", (onlineUsers) => {
-      console.log("online in app", onlineUsers);
+   //   console.log("online in app", onlineUsers);
       dispatch(setOnlineUsers(onlineUsers));
     });
 

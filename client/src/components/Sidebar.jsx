@@ -26,13 +26,13 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
       setSearchedUser([]);
       return;
     }
-    console.log("SEARCH QUERY -> ", query)
+    //console.log("SEARCH QUERY -> ", query)
     try {
       const response = await searchUserByInput(token, query)
       setSearchedUser(response);
-      console.log("RESPONSE FROM THE SEARCH USER ", response)
+    //  console.log("RESPONSE FROM THE SEARCH USER ", response)
     } catch (error) {
-      console.log("error int the search uesr by input in sidebar")
+     // console.log("error int the search uesr by input in sidebar")
     }
   }
   useEffect(() => {
@@ -54,11 +54,11 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
       //  console.log("selected user id in getselected user message ",user?._id)
       const userMessage = await getUserSelectedMessage(token, user._id)
 
-      console.log("user message response ", userMessage);
+     // console.log("user message response ", userMessage);
       setMessages(userMessage);
 
     } catch (error) {
-      console.log("error in the userselected chat ", error)
+     // console.log("error in the userselected chat ", error)
     }
     // setunseen messages seen
     dispatch(setunseenMessage({ selectedUser: user?._id, count: 0 }));
@@ -70,7 +70,7 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
     if (selectedUser?._id) {
       clickHandler(selectedUser);
     }
-    console.log("online users ", onlineUsers)
+  //  console.log("online users ", onlineUsers)
 
 
   }, [selectedUser])
@@ -80,7 +80,7 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
   }
 
   useEffect(() => {
-    console.log("Users to show updated:", usersToShow);
+   // console.log("Users to show updated:", usersToShow);
   }, [usersToShow]);
   // setDummyUser(dummyUser);
   // console.log("all users ", allUsers);
@@ -164,14 +164,14 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
             </div>
             {/* for the latest Messages */}
 
-            <div className="flex-1   flex-col gap-0.5 items-center md:flex-row sm:flex hidden  text-center">
+            <div className="flex-1   flex-col gap-0.5 items-center md:flex-row md:flex hidden  text-center">
                     <div>
                        { latestMessage[user?._id]?.senderId === user?._id
         ?  (<p className='text-gray-500'>{user?.firstName} :</p>)
         :  (<p className='text-gray-500'>{latestMessage[user?._id]?.text && latestMessage[user?._id]?.text?.length>0 && "you :"}</p>)
          }
                     </div>
-              <div className="  text-sm text-gray-200">
+              <div className="text-sm text-gray-200">
                 {latestMessage[user?._id]?.text
                   ? `${latestMessage[user?._id].text.slice(0,10)}`
                   : latestMessage[user?._id]?.image

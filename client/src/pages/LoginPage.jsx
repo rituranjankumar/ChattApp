@@ -22,13 +22,13 @@ export const LoginPage = () => {
   const onSubmit = async (data) => {
 
     setLoading(true);
-    console.log('Login data:', data);
+   // console.log('Login data:', data);
     // TODO: integrate login logic or API call
     try {
 
       const response = await Login(data, navigate, dispatch)
     } catch (error) {
-      console.log("error in login page ", error.message)
+    //  console.log("error in login page ", error.message)
 
     }
 
@@ -37,18 +37,18 @@ export const LoginPage = () => {
 
       const googleSignUpResponse=async(response)=>
       {
-          console.log("GOOGLE RESPONSE TO CLIENT ",response)
+        //  console.log("GOOGLE RESPONSE TO CLIENT ",response)
           setLoading(true);
           try{
               const res= await googleLoginSignup(response?.code,dispatch,navigate)
           }catch(error)
           {
-              console.log("ERROR INTHE FRONTEND TO BACKEND API CALL IN GOOGLE LOGIN ",error)
+            //  console.log("ERROR INTHE FRONTEND TO BACKEND API CALL IN GOOGLE LOGIN ",error)
           }
           setLoading(false);
       }
       const handleGoogleSignup=useGoogleLogin({
-          onError:(Error)=>console.log("ERROR IN GOOGLE RESPONSE TO THE FRONTEND ",Error),
+          onError:(Error)=>console.log("ERROR IN GOOGLE RESPONSE TO THE FRONTEND "),
            onSuccess: googleSignUpResponse,
               flow: 'auth-code',
       });
