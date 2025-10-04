@@ -37,6 +37,11 @@ export const sendmessagetoSelectedUser = async (token, userId, text, imageFile) 
   if (imageFile) formData.append("imageFile", imageFile);
 
   try {
+    if(imageFile)
+    {
+     var imageToastid= toast.loading("Sending Image...");
+    }
+     
     const response = await apiConnector(
       "POST",
       MESSAGE_API.SEND_MESSAGE(userId),
@@ -46,6 +51,11 @@ export const sendmessagetoSelectedUser = async (token, userId, text, imageFile) 
         "Content-Type": "multipart/form-data",
       }
     );
+   if(imageFile)
+    {
+       toast.success("Image send");
+       toast.dismiss(imageToastid);
+    }
     return response.data.message;
   } catch (error) {
    // console.error("Send message error:", error);

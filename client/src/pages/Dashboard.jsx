@@ -12,8 +12,9 @@ const Dashboard = () => {
   const {latestMessage}=useSelector((state) => state.onLineUser);
   const [selectedUser, setSelectedUser] = useState(null);
   const { token } = useSelector((state) => state.auth)
-  const [users, setUsers] = useState([]);
-  const [unseen, setunSeen] = useState([]);
+  // const [users, setUsers] = useState([]);
+  // const [unseen, setunSeen] = useState([]);
+   const [userMessageLoading,setUserMessageLoading]=useState(null);
   const [selectedUsermessages, setMessages] = useState([]);
   const dispatch = useDispatch();
   const fetchUsers = async () => {
@@ -57,24 +58,24 @@ const Dashboard = () => {
     fetchUsers();
   }, [])
   return (
-    <div className="w-full h-screen overflow-hidden   bg-gradient-to-br from-[#1f1b2e] to-[#2c2641]">
+    <div className="w-full h-screen overflow-hidden   bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       <div className="grid md:grid-cols-6 sm:grid-cols-2 backdrop-blur-lg border-2 border-gray-600 rounded-2xl overflow-hidden h-full">
-        {/* Pass selectedUser to Sidebar */}
-        <div className='col-span-2 h-full overflow-y-auto'>
+     
+        <div className='sm:col-span-2 h-full overflow-y-auto'>
           <Sidebar selectedUser={selectedUser} setSelectedUser={setSelectedUser}
-            setMessages={setMessages}
+            setMessages={setMessages} setUserMessageLoading={setUserMessageLoading}
           />
         </div>
 
 
-        <div className='col-span-4 min-h-full'>
+        <div className='sm:col-span-4 min-h-full'>
           <ChatContainer setSelectedUser={setSelectedUser} selectedUser={selectedUser}
-            selectedUsermessages={selectedUsermessages}
+            selectedUsermessages={selectedUsermessages} userMessageLoading={userMessageLoading}
           />
         </div>
 
 
-        {/* <RightSidebar setSelectedUser={setSelectedUser} selectedUser={selectedUser}/> */}
+        
       </div>
     </div>
   );

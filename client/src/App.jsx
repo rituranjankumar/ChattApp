@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { connectSocket } from './socket';
 import { getSocket } from './socket';
 import { setOnlineUsers } from './slices/onlineUserSlice';
+import Error from './pages/Error';
  
 const App = () => {
   const { token } = useSelector((state) => state.auth)
@@ -50,7 +51,7 @@ const App = () => {
     bg-[url('./assets/bgImage.svg')]
     h-screen w-full   object-cover object-center overflow-hidden  ">
       <Routes>
-        <Route path='*' element={<Error />} />
+        
         <Route path='/login' element={<LoginPage />} />
         <Route path='/' element={<SignUpPage />} />
 
@@ -64,6 +65,8 @@ const App = () => {
           element={<ProtectedRoute>
             <ProfilePage />
           </ProtectedRoute>} />
+
+          <Route path='*' element={<Error />} />
       </Routes>
     </div>
   )

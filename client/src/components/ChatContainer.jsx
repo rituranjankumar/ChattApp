@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { FiImage, FiSend } from 'react-icons/fi';
 import assets from '../assets/assets';
@@ -12,23 +12,24 @@ import { sendmessagetoSelectedUser, markMessagesAsSeen } from '../Services/Messa
 import { timeFormatter } from '../utills/timefromatter';
 import { setunseenMessage, updateUnseenMessage, updateLatestMessage } from '../slices/onlineUserSlice';
 import { getSocket } from '../socket';
-const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) => {
+const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages, userMessageLoading }) => {
   const [messageInput, setMessageInput] = useState('');
   const { user } = useSelector((state) => state.profile)
   const [image, setImage] = useState(null);
   const [sending, setIsSending] = useState(false);
   const [messages, setMessages] = useState([]);
   const { allUsers, unseenMessage, onlineUsers, latestMessage } = useSelector((state) => state.onLineUser)
-
+  const [messageLoading, setMessageLoading] = useState(true);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-    const emojiRef=useRef();
-    clickOutSideEfffect(emojiRef,()=>setShowEmojiPicker(false));
+  const emojiRef = useRef();
+  clickOutSideEfffect(emojiRef, () => setShowEmojiPicker(false));
 
 
-    const inputRef=useRef();
+  const inputRef = useRef();
   useEffect(() => {
     setMessages(selectedUsermessages);
+    setMessageLoading(false);
   }, [selectedUsermessages])
 
   //console.log("selected user ", selectedUser);
@@ -49,15 +50,16 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
 
     setIsSending(true);
     try {
+
       const sent = await sendmessagetoSelectedUser(token, selectedUser?._id, messageInput, image);
       if (sent) {
         setMessages((prev) => [...prev, sent]);
         setMessageInput("");
         setImage(null);
-        
+
       }
     } catch (err) {
-    //  console.error("Error sending message", err);
+      //  console.error("Error sending message", err);
     } finally {
       setIsSending(false);
     }
@@ -88,7 +90,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
     // handle latest MESSAGE
     const handleLatestMessage = ({ userId, message }) => {
 
-     // console.log("📩 LatestMessage received:", { userId, message });
+      // console.log(" LatestMessage received:", { userId, message });
       dispatch(updateLatestMessage({ userId, message }));
     };
 
@@ -103,11 +105,11 @@ const ChatContainer = ({ selectedUser, setSelectedUser, selectedUsermessages }) 
   // console.log("unseen messages ARRE", unseenMessage);
 
   // for focus on the input after message send
-useEffect(() => {
-  if (messageInput === "") {
-    inputRef.current?.focus();
-  }
-}, [messageInput]);
+  useEffect(() => {
+    if (messageInput === "") {
+      inputRef.current?.focus();
+    }
+  }, [messageInput]);
   return selectedUser ? (
     <div
       className="h-screen relative   flex flex-col bg-cover bg-center backdrop-blur-lg"
@@ -139,7 +141,7 @@ useEffect(() => {
       </div>
 
       {/* Message Scrollable Section */}
-      <div className="  flex-1 overflow-y-auto   bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900    ">
+      {/* <div className="  flex-1 overflow-y-auto   bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900    ">
 
         <div className="p-4   flex flex-col gap-6">
           {messages?.map((msg, index) => (
@@ -206,7 +208,88 @@ useEffect(() => {
         <div ref={scrollToBottomRef}>
 
         </div>
-      </div>
+      </div> */}
+
+
+      {userMessageLoading ?
+
+        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+          <div className="w-12 h-12 border-4 border-green-800 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-green-00 text-sm animate-pulse">Loading Chat...</p>
+        </div>
+
+
+        :
+        <div className="  flex-1 overflow-y-auto   bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900    ">
+
+          <div className="p-4   flex flex-col gap-6">
+            {messages?.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex items-end w-fit gap-2 ${msg?.senderId !== user?._id
+                  ? 'justify-start'
+                  : 'justify-end self-end'
+                  }`}
+              >
+                {msg.image && !msg.text && (
+                  <img src={msg.image} className="max-w-xs rounded-lg" />
+                )}
+
+                {!msg.image && msg.text && (
+                  <div>
+                    <p
+                      className={`px-4 py-2 rounded-lg text-white ${msg.senderId === user?._id
+                        ? 'bg-blue-500 rounded-br-none'
+                        : 'bg-gray-700 rounded-bl-none'
+                        }`}
+                    >
+                      {msg.text}
+                    </p>
+                  </div>
+                )}
+
+
+                {msg.image && msg.text && (
+                  <div className='flex flex-col'>
+                    <img src={msg.image} className="max-w-xs rounded-lg" />
+                    <p
+                      className={`px-4 py-2 w-fit self-end rounded-lg text-white ${msg.senderId === user?._id
+                        ? 'bg-blue-500 rounded-br-none'
+                        : 'bg-gray-700 rounded-bl-none'
+                        }`}
+                    >
+                      {msg.text}
+                    </p>
+                  </div>
+                )}
+
+
+
+                <div className="text-center text-xs">
+                  <img
+                    className="w-7 h-7 rounded-full"
+                    src={
+                      msg.senderId === selectedUser._id
+                        ? selectedUser?.profilePic
+                        : user?.profilePic
+                    }
+                    alt=""
+                    loading='lazy'
+                  />
+                  <p className="text-gray-400">{timeFormatter(msg.createdAt)}</p>
+                </div>
+
+
+
+              </div>
+
+            ))}
+          </div>
+          <div ref={scrollToBottomRef}>
+
+          </div>
+        </div>}
+
 
       {/* Message Input */}
       <div className="min-w-full h-[64px] relative px-4 py-3 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center gap-2 border-t border-stone-600 z-10">
@@ -220,12 +303,12 @@ useEffect(() => {
                 className="w-full h-full z-10 object-cover"
                 alt="Preview"
               />
-              
-             
+
+
             </div>
-             
+
           )}
-            
+
           <input
             disabled={sending}
             type="file"
@@ -233,15 +316,15 @@ useEffect(() => {
             className="hidden"
             onChange={(e) => setImage(e.target.files?.[0])}
           />
-          <FiImage className="w-5 h-5 text-gray-300" /> 
+          <FiImage className="w-5 h-5 text-gray-300" />
         </label>
 
-         {image &&  <MdOutlineCancel className='absolute h-7 w-7 left-0.5 top-[0px] right-0 z-30 text-red-700 overflow-visible   rounded-full cursor-pointer p-1  ' onClick={()=>setImage(null)} />}
+        {image && <MdOutlineCancel className='absolute h-7 w-7 left-0.5 top-[0px] right-0 z-30 text-red-700 overflow-visible   rounded-full cursor-pointer p-1  ' onClick={() => setImage(null)} />}
 
         {/* Emoji Button */}
         <div
-        ref={emojiRef}
-         className="relative">
+          ref={emojiRef}
+          className="relative">
           <button
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
@@ -271,7 +354,7 @@ useEffect(() => {
             if (e.key === 'Enter') {
               e.preventDefault();
               handleSend();
-              
+
             }
           }}
           type="text"
@@ -287,21 +370,32 @@ useEffect(() => {
         {/* Send Button */}
         <button
           onClick={handleSend}
-          disabled={!messageInput.trim() && !image}
-          className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 duration-300 cursor-pointer hover:scale-105 transition-all"
+          disabled={(!messageInput.trim() && !image) || sending}
+          className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 duration-300 cursor-pointer hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <FiSend className="w-5 h-5" />
+          {sending ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <FiSend className="w-5 h-5" />
+          )}
         </button>
+
       </div>
 
     </div>
   ) : (
-    <div className="flex bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex-col items-center justify-center gap-4 text-gray-400 max-md:hidden h-full px-4">
-      <img src={assets.logo_icon} alt="Logo" className="w-16   h-16" />
-      <p className="text-lg font-semibold text-white text-center">
+    <div className="flex flex-col items-center justify-center gap-6 h-full px-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 max-md:hidden">
+      <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center shadow-lg hover:scale-105 transition-transform duration-300">
+        <img src={assets.chatIcon} alt="Logo" className="w-12 h-12" />
+      </div>
+      <p className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
         Chat Anytime, Anywhere
       </p>
+      <p className="text-gray-400 text-center max-w-xs">
+        Stay connected with friends and colleagues with instant messaging and media sharing.
+      </p>
     </div>
+
   );
 };
 

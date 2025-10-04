@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { getUserSelectedMessage, searchUserByInput } from '../Services/MessageServices';
 import { setunseenMessage, updateUnseenMessage } from '../slices/onlineUserSlice';
 
-const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
+const Sidebar = ({ selectedUser, setSelectedUser, setMessages,setUserMessageLoading }) => {
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth)
   //const [dummyUser,setDummyUser]=useState([]);
@@ -16,7 +16,7 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [searchedUsers, setSearchedUser] = useState([]);
-
+ 
 
   // select which users to show either the searched or all the users
   const usersToShow = searchQuery.length > 0 ? searchedUsers : allUsers;
@@ -45,18 +45,20 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
     }
   }, [searchQuery])
   // useEffect(() => {
-  //   console.log("🔄 Rendering with onlineUsers:", onlineUsers);
+  //   console.log(" Rendering with onlineUsers:", onlineUsers);
   // }, [onlineUsers]);
 
   const clickHandler = async (user) => {
+    // console.log("user is  -> ",user)
+    if(user?._id === selectedUser?._id) return null;
     try {
-
+        setUserMessageLoading(true);
       //  console.log("selected user id in getselected user message ",user?._id)
       const userMessage = await getUserSelectedMessage(token, user._id)
 
      // console.log("user message response ", userMessage);
       setMessages(userMessage);
-
+      setUserMessageLoading(false);
     } catch (error) {
      // console.log("error in the userselected chat ", error)
     }
@@ -164,7 +166,7 @@ const Sidebar = ({ selectedUser, setSelectedUser, setMessages }) => {
             </div>
             {/* for the latest Messages */}
 
-            <div className="flex-1   flex-col gap-0.5 items-center md:flex-row md:flex hidden  text-center">
+            <div className="flex-1   flex-col gap-0.5 items-center md:flex-row flex    text-center">
                     <div>
                        { latestMessage[user?._id]?.senderId === user?._id
         ?  (<p className='text-gray-500'>{user?.firstName} :</p>)
